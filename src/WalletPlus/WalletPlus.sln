@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31025.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WalletPlus.Api", "WalletPlus.Api\WalletPlus.Api.csproj", "{DD0045D6-C436-4734-9BC4-A822A1F28BDD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD0045D6-C436-4734-9BC4-A822A1F28BDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD0045D6-C436-4734-9BC4-A822A1F28BDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD0045D6-C436-4734-9BC4-A822A1F28BDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD0045D6-C436-4734-9BC4-A822A1F28BDD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {05FC96EC-17ED-4721-A0E5-6A0A8D9DFF5F}
+	EndGlobalSection
+EndGlobal
