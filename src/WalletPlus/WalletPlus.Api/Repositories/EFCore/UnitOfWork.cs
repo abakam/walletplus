@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using WalletPlus.Api.Models.Users;
 using WalletPlus.Api.Models.Wallets;
 using WalletPlus.Api.Models.Common;
+using WalletPlus.Api.Models.WalletTransaction;
 
 namespace WalletPlus.Api.Repositories.EFCore
 {
@@ -21,14 +22,17 @@ namespace WalletPlus.Api.Repositories.EFCore
         public IUserRepository Users { get; }
 
         public IWalletRepository Wallets { get; }
+        public IWalletTransactionRepository WalletTransactions { get; }
 
         public UnitOfWork(WalletPlusDbContext context,
             IUserRepository userRepository,
-            IWalletRepository walletRepository)
+            IWalletRepository walletRepository,
+            IWalletTransactionRepository walletTransactionRepository)
         {
             _context = context;
             Users = userRepository;
             Wallets = walletRepository;
+            WalletTransactions = walletTransactionRepository;
         }
 
         public WalletPlusDbContext Context

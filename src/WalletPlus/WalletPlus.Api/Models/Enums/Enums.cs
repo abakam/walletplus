@@ -13,4 +13,12 @@ namespace WalletPlus.Api.Models.Enums
         [Description("Bonus")]
         Bonus
     }
+
+    public enum WalletTransactionType
+    {
+        [Description("TopUp")]
+        TopUp,
+        [Description("Transfer")]
+        Transfer
+    }
 }

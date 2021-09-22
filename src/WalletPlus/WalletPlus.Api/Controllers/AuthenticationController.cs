@@ -12,7 +12,7 @@ using WalletPlus.Api.ViewModels;
 
 namespace WalletPlus.Api.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/v1/authentication")]
     [ApiController]
     public class AuthenticationController : ControllerBase
     {

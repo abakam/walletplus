@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +19,7 @@ using WalletPlus.Api.Models.Users;
 using WalletPlus.Api.Models.Wallets;
 using WalletPlus.Api.Repositories.EFCore;
 using WalletPlus.Api.Services.Helpers;
+using WalletPlus.Api.Services.Helpers.Constants;
 
 namespace WalletPlus.Api
 {
@@ -38,6 +41,22 @@ namespace WalletPlus.Api
 
             services.AddDbContext<WalletPlusDbContext>(opt => opt
                 .UseSqlServer(Configuration.GetConnectionString("DBConnection")));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = EnvironmentVariables.JWT_ISSUER,
+                            ValidAudience = EnvironmentVariables.JWT_AUDIENCE,
+                            IssuerSigningKey = new SymmetricSecurityKey
+                            (Convert.FromBase64String(EnvironmentVariables.JWT_SECRETKEY))
+                        };
+
+                    });
 
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddSingleton<ITokenHelper, TokenHelper>();
