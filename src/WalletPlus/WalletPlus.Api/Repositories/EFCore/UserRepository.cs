@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,11 @@ namespace WalletPlus.Api.Repositories.EFCore
             : base(context, logger)
         {
 
+        }
+
+        public async Task<User> GetByEmail(string email)
+        {
+            return await table.Where(u => u.Email == email).FirstOrDefaultAsync();
         }
     }
 }

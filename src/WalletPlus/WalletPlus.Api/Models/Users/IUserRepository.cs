@@ -8,6 +8,6 @@ namespace WalletPlus.Api.Models.Users
 {
     public interface IUserRepository : IRepository<User>
     {
-
+        Task<User> GetByEmail(string Email);
     }
 }

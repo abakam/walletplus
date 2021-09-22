@@ -25,12 +25,13 @@ namespace WalletPlus.Api.Repositories.EFCore
 
         public UnitOfWork(WalletPlusDbContext context,
             IUserRepository userRepository,
-            IWalletRepository walletRepository)
+            IWalletRepository walletRepository,
+            ILogger logger)
         {
             _context = context;
-
             Users = userRepository;
             Wallets = walletRepository;
+            _logger = logger;
         }
 
         public WalletPlusDbContext Context

@@ -9,7 +9,7 @@ using WalletPlus.Api.Models.Users;
 
 namespace WalletPlus.Api.Models.Wallets
 {
-    public class Wallet : EntityBase
+    public class Wallet : AuditEntity
     {
         public WalletType Type { get; set; }
         public decimal CurrentBalance { get; set; }
