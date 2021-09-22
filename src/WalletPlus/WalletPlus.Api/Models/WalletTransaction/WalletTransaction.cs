@@ -11,6 +11,7 @@ namespace WalletPlus.Api.Models.WalletTransaction
 {
     public class WalletTransaction : AuditEntity
     {
+        public decimal Amount { get; set; }
         public WalletTransactionType Type { get; set; }
         public string UserId { get; set; }
         [ForeignKey(nameof(UserId))]

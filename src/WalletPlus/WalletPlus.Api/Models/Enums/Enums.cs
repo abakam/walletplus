@@ -19,6 +19,8 @@ namespace WalletPlus.Api.Models.Enums
         [Description("TopUp")]
         TopUp,
         [Description("Transfer")]
-        Transfer
+        Transfer,
+        [Description("Bonus")]
+        Bonus
     }
 }

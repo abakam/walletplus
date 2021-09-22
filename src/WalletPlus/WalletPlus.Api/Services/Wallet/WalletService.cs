@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using WalletPlus.Api.Dtos;
 using WalletPlus.Api.Models.Common;
+using WalletPlus.Api.Models.WalletTransaction;
 using WalletPlus.Api.Services.Common;
+using WalletPlus.Api.Services.Helpers;
 using WalletPlus.Api.Services.Helpers.Constants;
 
 namespace WalletPlus.Api.Services.Wallet
@@ -31,7 +33,55 @@ namespace WalletPlus.Api.Services.Wallet
 
                 var mainWallet = (await _unitOfWork.Wallets.Find(w => w.UserId == user.Id && w.Type == Models.Enums.WalletType.Main)).FirstOrDefault();
 
-                var bonusWallet = (await _unitOfWork.Wallets.Find(w => w.UserId == user.Id && w.Type == Models.Enums.WalletType.Bonus)).FirstOrDefault();
+                mainWallet.CurrentBalance += topupWalletRequestDto.Amount;
+                mainWallet.UpdatedBy = user.Id;
+                mainWallet.UpdatedDate = DateTime.UtcNow;
+
+                var mainWalletTransaction = new WalletTransaction
+                {
+                    Amount = topupWalletRequestDto.Amount,
+                    Type = Models.Enums.WalletTransactionType.Bonus,
+                    CreatedBy = user.Id,
+                    CreatedDate = DateTime.UtcNow
+                };
+
+                _unitOfWork.CreateTransaction();
+
+                await _unitOfWork.Wallets.Update(mainWallet);
+                await _unitOfWork.WalletTransactions.Add(mainWalletTransaction);
+
+                var bonusAmount = BonusCalculator.GetBonus(topupWalletRequestDto.Amount);
+
+                if(bonusAmount > 0)
+                {
+                    var bonusWallet = (await _unitOfWork.Wallets.Find(w => w.UserId == user.Id && w.Type == Models.Enums.WalletType.Bonus)).FirstOrDefault();
+
+                    bonusWallet.CurrentBalance += bonusAmount;
+                    bonusWallet.UpdatedBy = user.Id;
+                    bonusWallet.UpdatedDate = DateTime.UtcNow;
+
+                    var bonusWalletTransaction = new WalletTransaction
+                    {
+                        Amount = bonusAmount,
+                        Type = Models.Enums.WalletTransactionType.Bonus,
+                        CreatedBy = user.Id,
+                        CreatedDate = DateTime.UtcNow
+                    };
+
+                    await _unitOfWork.Wallets.Update(bonusWallet);
+                    await _unitOfWork.WalletTransactions.Add(bonusWalletTransaction);
+                }
+
+                _unitOfWork.Save();
+
+                var topupWalletResponseDto = new TopupWalletResponseDto
+                {
+                    Amount = topupWalletRequestDto.Amount,
+                    Email = topupWalletRequestDto.Email,
+                    TransactionReference = mainWalletTransaction.Id
+                };
+
+                return BaseResponse<TopupWalletResponseDto>.WithSuccess(topupWalletResponseDto);
             }
             catch (Exception ex)
             {
