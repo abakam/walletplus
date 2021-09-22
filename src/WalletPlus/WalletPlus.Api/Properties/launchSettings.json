@@ -12,18 +12,25 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "swagger/index.html",
+      "applicationUrl": "http://localhost:5000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "WALLETPLUS_JWT_SECRETKEY": "a1981m1j1172j2j363jw83373373u3snsiuei3832i2mw223p4",
+        "WALLETPLUS_JWT_ISSUER": "http://localhost:5000",
+        "WALLETPLUS_JWT_AUDIENCE": "http://localhost:5100"
       }
     },
     "WalletPlus.Api": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
-      "applicationUrl": "http://localhost:5000",
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:5100",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "WALLETPLUS_JWT_SECRETKEY": "a1981m1j1172j2j363jw83373373u3snsiuei3832i2mw223p4",
+        "WALLETPLUS_JWT_ISSUER": "http://localhost:5000",
+        "WALLETPLUS_JWT_AUDIENCE": "http://localhost:5100"
       }
     }
   }

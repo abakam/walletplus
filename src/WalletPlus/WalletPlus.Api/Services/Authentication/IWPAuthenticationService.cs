@@ -7,7 +7,7 @@ using WalletPlus.Api.Services.Common;
 
 namespace WalletPlus.Api.Services.Authentication
 {
-    public interface IAuthenticationService
+    public interface IWPAuthenticationService
     {
         public Task<BaseResponse<LoginResponseDto>> Login(LoginRequestDto loginRequest);
         public Task<BaseResponse<LoginResponseDto>> Register(RegisterRequestDto registerRequestDto);

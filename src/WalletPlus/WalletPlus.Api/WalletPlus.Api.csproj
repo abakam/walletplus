@@ -13,10 +13,10 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="5.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.3.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.3.3" />
   </ItemGroup>
 
 

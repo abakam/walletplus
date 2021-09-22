@@ -13,13 +13,11 @@ namespace WalletPlus.Api.Repositories.EFCore
     {
         protected WalletPlusDbContext _context;
         internal DbSet<T> table;
-        private readonly ILogger _logger;
         
-        public Repository(WalletPlusDbContext context, ILogger logger)
+        public Repository(WalletPlusDbContext context)
         {
             _context = context;
             table = context.Set<T>();
-            _logger = logger;
         }
         public virtual async Task<IEnumerable<T>> GetAll()
         {

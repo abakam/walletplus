@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +16,7 @@ using WalletPlus.Api.Models.Common;
 using WalletPlus.Api.Models.Users;
 using WalletPlus.Api.Models.Wallets;
 using WalletPlus.Api.Repositories.EFCore;
+using WalletPlus.Api.Services.Helpers;
 
 namespace WalletPlus.Api
 {
@@ -36,7 +39,35 @@ namespace WalletPlus.Api
             services.AddDbContext<WalletPlusDbContext>(opt => opt
                 .UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddSingleton<ITokenHelper, TokenHelper>();
+
             services.AddControllers();
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Wallet Plus API",
+                    Description = "Backend Service for Wallet Plus",
+                    TermsOfService = new Uri("https://walletplus.com"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Wallet Plus API",
+                        Email = "contact@walletplus.com",
+                        Url = new Uri("https://walletplus.com")
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Wallet Plus API",
+                        Url = new Uri("https://walletplus.com/license"),
+                    }
+
+                });
+               
+                c.EnableAnnotations();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +77,12 @@ namespace WalletPlus.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger(s => s.SerializeAsV2 = true);
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint($"/swagger/v1/swagger.json", "Wallet Plus API V1");
+            });
 
             app.UseRouting();
 

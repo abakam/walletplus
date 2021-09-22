@@ -18,20 +18,17 @@ namespace WalletPlus.Api.Repositories.EFCore
         private bool _disposed;
         private string _errorMessage = string.Empty;
         private IDbContextTransaction _entityTransaction;
-        private readonly ILogger _logger;
         public IUserRepository Users { get; }
 
         public IWalletRepository Wallets { get; }
 
         public UnitOfWork(WalletPlusDbContext context,
             IUserRepository userRepository,
-            IWalletRepository walletRepository,
-            ILogger logger)
+            IWalletRepository walletRepository)
         {
             _context = context;
             Users = userRepository;
             Wallets = walletRepository;
-            _logger = logger;
         }
 
         public WalletPlusDbContext Context
@@ -65,8 +62,6 @@ namespace WalletPlus.Api.Repositories.EFCore
             {
                 foreach (var validationError in dbEx.ValidationResult.MemberNames)
                     _errorMessage += string.Format("Property: {0} Error: {1}", validationError, dbEx.Message) + Environment.NewLine;
-
-                _logger.LogError(dbEx, _errorMessage);
 
                 throw new Exception(_errorMessage, dbEx);
             }

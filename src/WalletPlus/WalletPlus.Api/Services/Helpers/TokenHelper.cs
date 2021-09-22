@@ -8,20 +8,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using WalletPlus.Api.Models.Users;
+using WalletPlus.Api.Services.Helpers.Constants;
 
 namespace WalletPlus.Api.Services.Helpers
 {
     public class TokenHelper : ITokenHelper
     {
-        public string Secret { get; }
-        public string Issuer { get; }
-        public string Audience { get; }
-        public TokenHelper(IConfiguration configuration)
-        {
-            Secret = configuration["JWT:Secret"];
-            Issuer = configuration["JWT:Issuer"];
-            Audience = configuration["JWT:Audience"];
-        }
         public string GenerateSecureSecret()
         {
             var hmac = new HMACSHA256();
@@ -31,7 +23,7 @@ namespace WalletPlus.Api.Services.Helpers
         public string GenerateToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Convert.FromBase64String(Secret);
+            var key = Convert.FromBase64String(EnvironmentVariables.JWT_SECRETKEY);
 
             var claimsIdentity = new ClaimsIdentity(new[] {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -44,8 +36,8 @@ namespace WalletPlus.Api.Services.Helpers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
-                Issuer = Issuer,
-                Audience = Audience,
+                Issuer = EnvironmentVariables.JWT_ISSUER,
+                Audience = EnvironmentVariables.JWT_SECRETKEY,
                 Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = signingCredentials,
 

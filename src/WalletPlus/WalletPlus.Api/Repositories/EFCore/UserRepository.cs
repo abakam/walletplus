@@ -10,8 +10,8 @@ namespace WalletPlus.Api.Repositories.EFCore
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(WalletPlusDbContext context, ILogger logger) 
-            : base(context, logger)
+        public UserRepository(WalletPlusDbContext context) 
+            : base(context)
         {
 
         }

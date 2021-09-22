@@ -11,12 +11,12 @@ using WalletPlus.Api.Services.Helpers.Constants;
 
 namespace WalletPlus.Api.Services.Authentication
 {
-    public class AuthenticationService : IAuthenticationService
+    public class WPAuthenticationService : IWPAuthenticationService
     {
         private readonly ITokenHelper _tokenHelper;
         private readonly IUserRepository _userRepository;
         private readonly ILogger _logger;
-        public AuthenticationService(ITokenHelper tokenHelper, IUserRepository userRepository, ILogger logger)
+        public WPAuthenticationService(ITokenHelper tokenHelper, IUserRepository userRepository, ILogger logger)
         {
             _tokenHelper = tokenHelper;
             _userRepository = userRepository;
@@ -48,7 +48,7 @@ namespace WalletPlus.Api.Services.Authentication
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Token = token
+                    AccessToken = token
                 };
 
                 return BaseResponse<LoginResponseDto>.WithSuccess(loginResponse);
@@ -97,7 +97,7 @@ namespace WalletPlus.Api.Services.Authentication
                     Email = newUser.Email,
                     FirstName = newUser.FirstName,
                     LastName = newUser.LastName,
-                    Token = token
+                    AccessToken = token
                 };
 
                 return BaseResponse<LoginResponseDto>.WithSuccess(registerResponse);
