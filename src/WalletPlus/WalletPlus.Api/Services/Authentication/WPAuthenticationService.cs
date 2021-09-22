@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WalletPlus.Api.Dtos;
+using WalletPlus.Api.Models.Common;
 using WalletPlus.Api.Models.Users;
 using WalletPlus.Api.Services.Common;
 using WalletPlus.Api.Services.Helpers;
@@ -14,19 +15,19 @@ namespace WalletPlus.Api.Services.Authentication
     public class WPAuthenticationService : IWPAuthenticationService
     {
         private readonly ITokenHelper _tokenHelper;
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger _logger;
-        public WPAuthenticationService(ITokenHelper tokenHelper, IUserRepository userRepository, ILogger logger)
+        public WPAuthenticationService(ITokenHelper tokenHelper, ILogger logger, IUnitOfWork unitOfWork)
         {
             _tokenHelper = tokenHelper;
-            _userRepository = userRepository;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
         public async Task<BaseResponse<LoginResponseDto>> Login(LoginRequestDto loginRequest)
         {
             try
             {
-                var user = (await _userRepository.Find(u => u.IsActive && u.Email == loginRequest.Email)).FirstOrDefault();
+                var user = (await _unitOfWork.Users.Find(u => u.IsActive && u.Email == loginRequest.Email)).FirstOrDefault();
 
                 if (user == null)
                 {
@@ -65,7 +66,7 @@ namespace WalletPlus.Api.Services.Authentication
         {
             try
             {
-                var newUser = await _userRepository.GetByEmail(registerRequest.Email);
+                var newUser = await _unitOfWork.Users.GetByEmail(registerRequest.Email);
 
                 if (newUser != null)
                 {
@@ -88,7 +89,29 @@ namespace WalletPlus.Api.Services.Authentication
                     CreatedDate = DateTime.UtcNow
                 };
 
-                await _userRepository.Add(newUser);
+                var mainWallet = new Models.Wallets.Wallet
+                {
+                    UserId = newUser.Id,
+                    CreatedBy = newUser.Id,
+                    Type = Models.Enums.WalletType.Main,
+                    CreatedDate = DateTime.UtcNow
+                };
+
+                var bonusWallet = new Models.Wallets.Wallet
+                {
+                    UserId = newUser.Id,
+                    CreatedBy = newUser.Id,
+                    Type = Models.Enums.WalletType.Bonus,
+                    CreatedDate = DateTime.UtcNow
+                };
+
+                _unitOfWork.CreateTransaction();
+
+                await _unitOfWork.Users.Add(newUser);
+                await _unitOfWork.Wallets.Add(mainWallet);
+                await _unitOfWork.Wallets.Add(bonusWallet);
+
+                _unitOfWork.Save();
 
                 var token = await Task.Run(() => _tokenHelper.GenerateToken(newUser));
 
@@ -104,6 +127,7 @@ namespace WalletPlus.Api.Services.Authentication
             }
             catch(Exception ex)
             {
+                _unitOfWork.Rollback();
                 _logger.LogError("AuthenicationService-Register", ex);
                 return BaseResponse<LoginResponseDto>.WithError(ErrorMessages.INTERNAL_ERROR_MESSAGE, StatusCodes.INTERNAL_ERROR);
             }

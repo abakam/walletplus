@@ -10,5 +10,6 @@ namespace WalletPlus.Api.Services.Helpers.Constants
         public const string UNAUTHORISED_USER = "401";
         public const string INTERNAL_ERROR = "500";
         public const string ALREADY_EXISTS = "422";
+        public const string RECORD_DO_NOT_EXISTS = "404";
     }
 }

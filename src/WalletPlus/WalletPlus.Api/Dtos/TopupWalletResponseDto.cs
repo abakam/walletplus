@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace WalletPlus.Api.Dtos
 {
-    public class TopupWalletResponseDto
+    public class TopupWalletResponseDto : TopupWalletRequestDto
     {
+        public string TransactionReference { get; set; }
     }
 }
